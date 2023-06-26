@@ -1,0 +1,28 @@
+name: Child workflow
+on:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      version:
+        description: "Version"
+        type: string
+        required: true
+    outputs:
+      version:
+        description: "Version"
+        value: ${{ jobs.return_output_to_base_workflow.outputs.version }}
+
+jobs:
+  return_output_to_base_workflow:
+    runs-on: ubuntu-latest
+
+    outputs:
+      version: ${{ steps.get_version.outputs.VERSION }}
+
+    steps:
+      - name: Version
+        id: get_version
+        run: |
+          version=${{ inputs.version }}
+          echo "VERSION=$version" >> $GITHUB_OUTPUT
+      
