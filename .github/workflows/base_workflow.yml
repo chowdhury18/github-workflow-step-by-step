@@ -1,0 +1,24 @@
+name: Base workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "version"
+        type: string
+        required: true
+    
+jobs:
+  child_workflow_call: 
+    uses: ./.github/workflows/child_workflow.yml
+    with:
+      version: ${{ inputs.version }}
+
+  display_version:
+    runs-on: ubuntu-latest
+    needs: [child_workflow_call]
+    steps:
+      - name: Print version
+        run: |
+          version=${{ needs.child_workflow_call.outputs.version }}
+          echo $version
